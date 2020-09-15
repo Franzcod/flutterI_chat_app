@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       /// DATO: Las rutas estan en otro archivo (routes.dart) 
 
 
-      initialRoute: 'login',
+      initialRoute: 'chat',
       routes: appRoutes,
     );
   }
