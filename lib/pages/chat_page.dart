@@ -25,6 +25,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     // ChatMessage(uid: '444', texto: 'Hola bebe',animationController: null), 
   ];
 
+
   bool _estaEscribiendo = false;
 
 

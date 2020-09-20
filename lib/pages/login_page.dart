@@ -1,8 +1,11 @@
+import 'package:chat_110920/services/auth_service.dart';
 import 'package:chat_110920/widget/boton_azul.dart';
 import 'package:chat_110920/widget/custom_imput.dart';
 import 'package:chat_110920/widget/labels_login.dart';
 import 'package:chat_110920/widget/logo_login.dart';
+import 'package:chat_110920/helpers/mostrar_alerta.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -63,6 +66,9 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -84,9 +90,24 @@ class __FormState extends State<_Form> {
     
           BotonAzul(
             text: 'Ingrese',
-            onPressed: (){
-              print(emailCtrl.text);
-              print(passCtrl.text);
+
+            // si se esta autenticando el boton azul se pone en null y se desabilita
+            onPressed: authService.autenticando ? null : ()  async {
+              
+              ///Sacar el teclado
+              FocusScope.of(context).unfocus();
+
+              /// ".trim()" para que no vayan espacios en blanco!!!
+              final loginOk = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
+
+              if(loginOk){
+                //TODO: conectar al socket server
+
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                //Mostrar alerta
+                mostrarAlerta(context, 'Ups!', 'Usuario  o Contraseña son incorrectos');
+              }
             },
           )
        ],

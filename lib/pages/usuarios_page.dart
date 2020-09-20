@@ -1,5 +1,7 @@
 import 'package:chat_110920/models/usuario.dart';
+import 'package:chat_110920/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
@@ -22,14 +24,52 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
-      title: Center(child: Text('Mi Nombre',style: TextStyle(color: Colors.black54),)),
+      title: Center(child: Text(usuario.nombre,style: TextStyle(color: Colors.black54),)),
       elevation: 1,
       backgroundColor: Colors.white,
       leading: IconButton(
         icon: Icon(Icons.exit_to_app, color: Colors.black54,),
-        onPressed: (){},
+        onPressed: (){
+          //Desconectarnos del server
+          
+          
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              
+              title: Center(child: Text('¿Estas Seguro?', style: TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.bold))),
+              content: Text('Vas a desconectarte', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,),
+              actions: <Widget>[
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancelar', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold,),),
+                  elevation: 5,
+                  textColor: Colors.blue,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, 'login');
+                    AuthService.deleteToken();
+                  },
+                  child: Text('Salir', style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold,),),
+                  elevation: 5,
+                  textColor: Colors.blue,
+                ),
+              ],
+            ),
+          );
+
+
+
+        },
       ),
       actions: <Widget>[
         Container(

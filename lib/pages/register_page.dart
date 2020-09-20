@@ -1,8 +1,13 @@
+
+
+import 'package:chat_110920/helpers/mostrar_alerta.dart';
+import 'package:chat_110920/services/auth_service.dart';
 import 'package:chat_110920/widget/boton_azul.dart';
 import 'package:chat_110920/widget/custom_imput.dart';
 import 'package:chat_110920/widget/labels_login.dart';
 import 'package:chat_110920/widget/logo_login.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class RegisterPage extends StatelessWidget {
@@ -58,12 +63,15 @@ class _Form extends StatefulWidget {
 
 class __FormState extends State<_Form> {
 
-  final nameCtrl = TextEditingController();
+  final nameCtrl  = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCtrl  = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -91,10 +99,18 @@ class __FormState extends State<_Form> {
            ),
     
           BotonAzul(
-            text: 'Registrar',
-            onPressed: (){
-              print(emailCtrl.text);
-              print(passCtrl.text);
+            text: 'Crear cuenta',
+            onPressed: authService.autenticando ? null : () async {
+              
+            final registroOk = await authService.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
+            
+            if( registroOk == true ){
+              // Conectar socket server
+
+              Navigator.pushReplacementNamed(context, 'usuarios');
+            }
+            mostrarAlerta(context, 'Ups!', registroOk);
+
             },
           )
        ],

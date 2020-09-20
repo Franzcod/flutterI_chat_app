@@ -1,5 +1,7 @@
+import 'package:chat_110920/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_110920/routes/routes.dart';
+import 'package:provider/provider.dart';
 
 
 void main() => runApp(MyApp());
@@ -7,15 +9,21 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Chat App',
+    //Como se usa Provider para manejar estados se pone el MaterialApp entro de un MultiProvider
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthService()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Chat App',
 
-      /// DATO: Las rutas estan en otro archivo (routes.dart) 
+          /// DATO: Las rutas estan en otro archivo (routes.dart) 
 
-
-      initialRoute: 'chat',
-      routes: appRoutes,
+          initialRoute: 'loading',
+          routes: appRoutes,
+        ),
     );
   }
 }
+
