@@ -2,6 +2,7 @@
 
 import 'package:chat_110920/helpers/mostrar_alerta.dart';
 import 'package:chat_110920/services/auth_service.dart';
+import 'package:chat_110920/services/socket_service.dart';
 import 'package:chat_110920/widget/boton_azul.dart';
 import 'package:chat_110920/widget/custom_imput.dart';
 import 'package:chat_110920/widget/labels_login.dart';
@@ -71,6 +72,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -102,14 +104,16 @@ class __FormState extends State<_Form> {
             text: 'Crear cuenta',
             onPressed: authService.autenticando ? null : () async {
               
-            final registroOk = await authService.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
-            
-            if( registroOk == true ){
-              // Conectar socket server
-
-              Navigator.pushReplacementNamed(context, 'usuarios');
-            }
-            mostrarAlerta(context, 'Ups!', registroOk);
+              final registroOk = await authService.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
+              
+              if( registroOk == true  ){
+                // Conectar socket server
+                socketService.connect();
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else{
+                mostrarAlerta(context, 'Ups!', registroOk);
+              }
+              
 
             },
           )

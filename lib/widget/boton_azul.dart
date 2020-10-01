@@ -22,7 +22,7 @@ class BotonAzul extends StatelessWidget {
              shape: StadiumBorder(),
              child: Container(
                width: double.infinity,
-               height: 50,
+               height: 40,
                child: Center(
                  child: Text(this.text , style: TextStyle(color: Colors.white, fontSize: 17, letterSpacing: 5 ), )),
              ),
